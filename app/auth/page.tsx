@@ -69,7 +69,7 @@ export default function Auth() {
           if (role === "OWNER" || role === "ADMIN")
             router.replace("/admin/organization");
           if (role === "EMPLOYEE") router.replace("/home");
-          if (role === "SECURITY") router.replace("/security/dashboard");
+          if (role === "SECURITY") router.replace("/security");
         }
       } else if (mode == "ORGANIZATION") {
         // for oranization creation

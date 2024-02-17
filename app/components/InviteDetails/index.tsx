@@ -47,6 +47,7 @@ const InviteDetailInput: React.FC<PropsIntf> = ({
             ></textarea>
           </label>
         </div>
+
         <button className="btn mr-2" onClick={() => onClickBack()}>
           Back
         </button>

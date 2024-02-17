@@ -15,6 +15,7 @@ const config: Config = {
       },
       colors: {
         primary_purple: "#7F8CD9",
+        white_smoke: "#f5f5f5",
       },
     },
   },

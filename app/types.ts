@@ -30,3 +30,33 @@ export interface VisitorData {
   phone: string;
   company: string;
 }
+
+export type InvitationStatusData = {
+  current_status: string;
+  created_at: string;
+};
+
+export type InvitationPassData = {
+  id: number;
+  valid_from: string;
+  valid_till: string;
+  purpose: string;
+  checked_in_at: string;
+  checked_out_at: string;
+  visitor: {
+    id: number;
+    email: string;
+    first_name: string;
+    last_name: string;
+    phone: string;
+    address: string;
+    company: string;
+  };
+  visiting_person: {
+    emai: string;
+    first_name: string;
+    last_name: string;
+    role: string;
+  };
+  invitationstatus_set: [InvitationStatusData];
+};

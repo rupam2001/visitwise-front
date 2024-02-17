@@ -1,7 +1,3 @@
-"use client";
-import CreateOrSelectVisitor from "@/app/components/CreateOrSelectVisitor";
-import InviteDetailInput from "@/app/components/InviteDetails";
-import PassCard, { PassDataProps } from "@/app/components/PassCard";
 import {
   JSONObject,
   extractFormData,
@@ -9,14 +5,44 @@ import {
   getUTCTimestamp,
   hasEmptyFields,
 } from "@/app/utils";
-import * as React from "react";
 import { useRouter } from "next/navigation";
+import React, { useEffect } from "react";
+import PassCard, { PassDataProps } from "../PassCard";
 import { ENDPOINT } from "@/app/constants";
+import CreateOrSelectVisitor from "../CreateOrSelectVisitor";
+import InviteDetailInput from "../InviteDetails";
+import InviteDetailInputSecurity from "./InviteDetailInputSecurity";
 
-export default function CreateInvite() {
+const getCurrentDate = () => {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = (today.getMonth() + 1).toString().padStart(2, "0");
+  const day = today.getDate().toString().padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
+function getCurrentTime() {
+  const now = new Date();
+  const hours = now.getHours().toString().padStart(2, "0");
+  const minutes = now.getMinutes().toString().padStart(2, "0");
+  return `${hours}:${minutes}`;
+}
+
+export default function WalkInProcess() {
   const router = useRouter();
   const [visitorData, setVisitorData] = React.useState<JSONObject>({});
-  const [inviteData, setInviteData] = React.useState<JSONObject>({});
+  const [inviteData, setInviteData] = React.useState<JSONObject>({
+    date: getCurrentDate(),
+    time: getCurrentTime(),
+  });
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setInviteData((iv) => ({ ...iv, time: getCurrentTime() }));
+    }, 1000);
+
+    // Cleanup interval on component unmount
+    return () => clearInterval(intervalId);
+  }, []);
   const [passData, setPassData] = React.useState<PassDataProps | null>();
   const [isSelectVisitor, setIsSelectVisitor] = React.useState(false);
   const stepsList = [
@@ -62,6 +88,7 @@ export default function CreateInvite() {
   const [currentStep, setCurrentStep] = React.useState(0);
 
   const nextStep = () => {
+    if (currentStep == 3) return;
     let steps = [...stepInfo];
     steps[currentStep].isCompeted = true;
     setStepInfo(steps);
@@ -78,7 +105,7 @@ export default function CreateInvite() {
     setInviteData(data);
     console.log(data);
     preparePassPreviewData(inviteData);
-    nextStep();
+    // nextStep();
   };
 
   const preparePassPreviewData = (inviteData: JSONObject) => {
@@ -95,6 +122,7 @@ export default function CreateInvite() {
       purpose: inviteData["purpose"] as string,
     };
     setPassData(pass);
+    console.log(pass, "PAASSS");
     console.log(
       getUTCTimestamp(
         inviteData["date"] as string,
@@ -171,7 +199,7 @@ export default function CreateInvite() {
     if (res.success) return res;
   };
   const createInvitation = async (data: JSONObject) => {
-    const res = await fetch(ENDPOINT + "/invitation/", {
+    const res = await fetch(ENDPOINT + "/invitation/create_by_security/", {
       method: "POST",
       headers: getAuthHeaders(),
       body: JSON.stringify(data),
@@ -182,6 +210,10 @@ export default function CreateInvite() {
     setVisitorData(data);
     setIsSelectVisitor(true);
     nextStep();
+  };
+
+  const handleSelectVisitingPerson = (user: JSONObject) => {
+    setInviteData((iv) => ({ ...iv, visiting_person_id: user["id"] }));
   };
 
   return (
@@ -202,12 +234,15 @@ export default function CreateInvite() {
           />
         )}
         {currentStep == 1 && (
-          <InviteDetailInput
+          <InviteDetailInputSecurity
             onSubmitCallback={handleInviteDetailInput}
             onClickBack={() => {
               setCurrentStep((curr) => curr - 1);
             }}
             defaultValues={inviteData}
+            onSelectUserCallback={(userData: JSONObject) => {
+              handleSelectVisitingPerson(userData);
+            }}
           />
         )}
         {currentStep == 2 && (

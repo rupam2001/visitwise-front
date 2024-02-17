@@ -8,12 +8,16 @@ interface PropsIntf {
   onSubmitCallback: FormEventHandler;
   defaultValues: JSONObject;
   onSelectVisiorCallback: (dat: JSONObject) => void;
+  SUGGESTED_VISITOR_ENDPOINT: string | null;
+  SEARCH_VISITOR_ENDPOINT: string | null;
 }
 
 const CreateOrSelectVisitor: React.FC<PropsIntf> = ({
   onSubmitCallback,
   defaultValues,
   onSelectVisiorCallback,
+  SUGGESTED_VISITOR_ENDPOINT,
+  SEARCH_VISITOR_ENDPOINT,
 }) => {
   const placeholderVisitors = Array.from({ length: 4 }, (_) => ({
     placeholder: "yes",
@@ -25,10 +29,15 @@ const CreateOrSelectVisitor: React.FC<PropsIntf> = ({
   const [searchVisitors, setsearchVisitors] = useState<JSONObject[]>([]);
 
   const getSuggestedVisitors = async () => {
-    const res = await fetch(ENDPOINT + "/visitor/suggested/", {
-      method: "GET",
-      headers: getAuthHeaders(),
-    }).then((r) => r.json());
+    const res = await fetch(
+      SUGGESTED_VISITOR_ENDPOINT
+        ? SUGGESTED_VISITOR_ENDPOINT
+        : ENDPOINT + "/visitor/suggested/",
+      {
+        method: "GET",
+        headers: getAuthHeaders(),
+      }
+    ).then((r) => r.json());
     if (res.success) return res;
   };
   useEffect(() => {
@@ -59,8 +68,6 @@ const CreateOrSelectVisitor: React.FC<PropsIntf> = ({
               className="grow "
               placeholder="Frist Name"
               name="first_name"
-              //   tabIndex={0}
-              //   role="button"
               defaultValue={defaultValues?.first_name as string}
               autoComplete="none"
             />
@@ -172,9 +179,9 @@ const CreateOrSelectVisitor: React.FC<PropsIntf> = ({
           </label>
         </div>
         <div className="flex overflow-x-auto w-2/3  mt-8 p-2">
-          {suggestedVisitors.map((sv) => (
+          {suggestedVisitors.slice(0, 5).map((sv) => (
             <div
-              className="mr-6 flex flex-col items-center p-2 cursor-pointer hover:text-blue-700 "
+              className="mr-6 flex flex-col items-center p-1 cursor-pointer hover:text-blue-700 "
               onClick={() => {
                 if (sv.placeholder == "yes") return;
                 onSelectVisiorCallback(sv);
@@ -197,10 +204,14 @@ const CreateOrSelectVisitor: React.FC<PropsIntf> = ({
                   )}
                 </div>
               </div>
-              {!sv.placeholder && (
-                <p>{`${sv.first_name as string} ${sv.last_name as string}`}</p>
+              {sv.placeholder != "yes" && (
+                <p className="w-full  text-sm">
+                  {`${sv.first_name as string} ${sv.last_name as string}`}
+                </p>
               )}
-              {sv.placeholder && <p className="skeleton h-4 w-12 mt-2"></p>}
+              {sv.placeholder == "yes" && (
+                <p className="skeleton h-4 w-12 mt-2"></p>
+              )}
             </div>
           ))}
         </div>

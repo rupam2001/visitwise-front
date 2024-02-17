@@ -5,8 +5,8 @@ interface HomeLayoutProps {
 }
 export default function HomeLayout({ children }: HomeLayoutProps) {
   return (
-    <div className="bg-gray-50 min-h-screen">
-      <div>
+    <div className="min-h-screen " style={{ backgroundColor: "whitesmoke" }}>
+      <div className="sticky z-50 top-0">
         <Navbar />
       </div>
       {children}
