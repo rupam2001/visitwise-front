@@ -9,6 +9,7 @@ export interface PassDataProps {
   visiting_person_name: string;
   purpose: string;
   location: string;
+  visiting_person_id: string | null;
 }
 interface PassCardProps {
   passData: PassDataProps | null | undefined;

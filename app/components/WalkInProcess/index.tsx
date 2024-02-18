@@ -102,9 +102,9 @@ export default function WalkInProcess() {
       alert("please fill all the required fields");
       return;
     }
-    setInviteData(data);
-    console.log(data);
-    preparePassPreviewData(inviteData);
+    console.log(data, "invite data submit");
+    preparePassPreviewData({ ...inviteData, ...data });
+    setInviteData({ ...inviteData, ...data });
     // nextStep();
   };
 
@@ -115,7 +115,8 @@ export default function WalkInProcess() {
         " " +
         (visitorData["last_name"] as string),
       visitor_email: visitorData["email"] as string,
-      visiting_person_name: "You",
+      visiting_person_name: inviteData["visiting_person_name"] as string,
+      visiting_person_id: inviteData["visiting_person_id"] as string,
       date: inviteData["date"] as string,
       time: inviteData["time"] as string,
       location: "",
@@ -123,13 +124,12 @@ export default function WalkInProcess() {
     };
     setPassData(pass);
     console.log(pass, "PAASSS");
-    console.log(
-      getUTCTimestamp(
-        inviteData["date"] as string,
-        inviteData["time"] as string
-      ).toString()
-    );
   };
+  useEffect(() => {
+    if (passData?.time) {
+      nextStep();
+    }
+  }, [passData]);
 
   const [stepInfo, setStepInfo] = React.useState(stepsList);
 
@@ -146,6 +146,7 @@ export default function WalkInProcess() {
       //if visitor is selected then create invitation only
       const { id } = visitorData;
       const data = prepareInvitationData(inviteData);
+      console.log(data, "prepareInvite");
       const res = await createInvitation({ ...data, visitor_id: id });
       if (res.success) {
         nextStep();
@@ -157,13 +158,15 @@ export default function WalkInProcess() {
   };
 
   const prepareInvitationData = (data: JSONObject) => {
-    return {
+    const p = {
       ...data,
       valid_from: getUTCTimestamp(
         inviteData["date"] as string,
         inviteData["time"] as string
       ).toString(),
     };
+    console.log(p, "inside prepareInvitaion");
+    return p;
   };
 
   const createVisitorAndInvitation = async () => {
@@ -213,7 +216,12 @@ export default function WalkInProcess() {
   };
 
   const handleSelectVisitingPerson = (user: JSONObject) => {
-    setInviteData((iv) => ({ ...iv, visiting_person_id: user["id"] }));
+    setInviteData((iv) => ({
+      ...iv,
+      visiting_person_id: user["id"],
+      visiting_person_name: `${user["first_name"]} ${user["last_name"]}`,
+    }));
+    console.log(user, inviteData);
   };
 
   return (
@@ -264,7 +272,7 @@ export default function WalkInProcess() {
                 className="btn mr-2 btn-sm"
                 onClick={() => {
                   //   reset();
-                  router.replace("/home/invites");
+                  router.replace("/security");
                 }}
               >
                 Back to home

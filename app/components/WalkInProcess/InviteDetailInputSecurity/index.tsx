@@ -18,6 +18,8 @@ const InviteDetailInputSecurity: React.FC<PropsIntf> = ({
   const [users, setUsers] = React.useState<JSONObject[]>([]);
   const [searchQuery, setSearchQuery] = React.useState<string>("");
 
+  const [visitingPerson, setVisitingPerson] = React.useState<JSONObject>({});
+
   React.useEffect(() => {
     console.log(searchQuery);
     if (searchQuery.trim() != "") search();
@@ -34,6 +36,14 @@ const InviteDetailInputSecurity: React.FC<PropsIntf> = ({
         setUsers(res.data);
       }
     } catch (error) {}
+  };
+
+  const onSelectVisitingPerson = (user: JSONObject) => {
+    setVisitingPerson((person) => ({
+      ...person,
+      visiting_person_id: user["id"],
+      visiting_person_name: `${user["first_name"]} ${user["last_name"]}`,
+    }));
   };
 
   return (
@@ -60,6 +70,15 @@ const InviteDetailInputSecurity: React.FC<PropsIntf> = ({
               name="time"
             />
           </label>
+          <input
+            type="text"
+            className="grow"
+            placeholder="visiting_person_id"
+            //   defaultValue={defaultValues?.time as string}
+            value={defaultValues?.visiting_person_id as string}
+            name="visiting_person_id_form"
+            hidden
+          />
         </div>
         <div className="flex w-full justify-center mt-4 mb-4">
           <label className="flex items-center gap-2 grow">
@@ -69,6 +88,23 @@ const InviteDetailInputSecurity: React.FC<PropsIntf> = ({
               name="purpose"
               defaultValue={defaultValues?.purpose as string}
             ></textarea>
+          </label>
+        </div>
+        <div>
+          <label className="input input-bordered flex items-center gap-2 ml-4 ">
+            {/* <FaClock className="w-4 h-4 opacity-70" /> */}
+            <input
+              type="text"
+              className="grow"
+              placeholder="Visiting person (select from the following)"
+              value={
+                defaultValues?.visiting_person_name != null
+                  ? (defaultValues?.visiting_person_name as string)
+                  : (visitingPerson?.visiting_person_name as string)
+              }
+              name="visiting_person_name_form"
+              readOnly={true}
+            />
           </label>
         </div>
 
@@ -107,6 +143,7 @@ const InviteDetailInputSecurity: React.FC<PropsIntf> = ({
                     onClick={() => {
                       if (user.placeholder == "yes") return;
                       onSelectUserCallback(user);
+                      onSelectVisitingPerson(user);
                     }}
                   >
                     <div className="avatar placeholder">

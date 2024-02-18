@@ -31,6 +31,12 @@ export interface VisitorData {
   company: string;
 }
 
+export interface Belongings {
+  name: string;
+  description: string;
+  identifier_code: string;
+}
+
 export type InvitationStatusData = {
   current_status: string;
   created_at: string;
@@ -59,4 +65,11 @@ export type InvitationPassData = {
     role: string;
   };
   invitationstatus_set: [InvitationStatusData];
+  belongings: [Belongings];
+};
+
+export type InvitationPassResponse = {
+  success: boolean;
+  message: string;
+  data: InvitationPassData[];
 };

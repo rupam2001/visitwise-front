@@ -85,6 +85,7 @@ export function convertUtcToBrowserTime(utcTimeString: string): string {
 }
 
 import moment from "moment";
+import { InvitationStatusData } from "./types";
 
 export function formatDateTime(dateTimeString: string): string {
   const formattedDateTime = moment(
@@ -118,4 +119,48 @@ export function getTodayDateInUTC(): string {
     today.toISOString().split("T")[0] + "T00:00:00.000Z"
   );
   return utcDate.toISOString().split("T")[0];
+}
+
+export function getLatestStatus(records: InvitationStatusData[]) {
+  if (!records || records.length === 0) {
+    return null;
+  }
+
+  // Sort records by created_at in descending order
+  const sortedRecords = records.sort(
+    (a, b) =>
+      new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+  );
+
+  // Return the first element (latest record)
+  return sortedRecords[0].current_status;
+}
+
+export function calculateTimeDifferenceInHours(
+  timeString1: string,
+  timeString2: string
+): number {
+  const date1: Date = new Date(timeString1);
+  const date2: Date = new Date(timeString2);
+
+  // Calculate the time difference in milliseconds
+  const timeDifferenceInMilliseconds: number =
+    date2.getTime() - date1.getTime();
+
+  // Convert milliseconds to hours
+  const timeDifferenceInHours: number =
+    timeDifferenceInMilliseconds / (1000 * 60 * 60);
+
+  return timeDifferenceInHours;
+}
+
+export function isTime1BeforeTime2(
+  timeString1: string,
+  timeString2: string
+): boolean {
+  const date1: Date = new Date(timeString1);
+  const date2: Date = new Date(timeString2);
+
+  // Compare the two dates
+  return date1 < date2;
 }

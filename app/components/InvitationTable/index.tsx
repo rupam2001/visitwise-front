@@ -1,14 +1,17 @@
 import { INVITATION_STATUS } from "@/app/constants";
 import { InvitationPassData, InvitationStatusData } from "@/app/types";
-import { getUTCTimestamp } from "@/app/utils";
+import { getUTCTimestamp, isTime1BeforeTime2 } from "@/app/utils";
 import moment from "moment";
 import * as React from "react";
+import { InvitationActionPorps } from "../InvitationAction";
 interface InvitationTableProps {
   invitationData: InvitationPassData[];
+  CustomActionComponent: React.ComponentType<InvitationActionPorps>;
 }
 
 const InvitationTable: React.FC<InvitationTableProps> = ({
   invitationData,
+  CustomActionComponent,
 }) => {
   return (
     <div className="">
@@ -57,27 +60,27 @@ const InvitationTable: React.FC<InvitationTableProps> = ({
                 </div>
               </td>
               <td>
-                {moment(new Date(invitation.valid_from)).format(
-                  "MMM Do YYYY, h:mm a"
-                )}
+                {moment(new Date(invitation.valid_from)).format("h:mm a")}
               </td>
               <td>
-                {invitation.checked_in_at ? invitation.checked_in_at : "--"}
+                {invitation.checked_in_at
+                  ? moment(new Date(invitation.checked_in_at)).format("h:mm a")
+                  : isTime1BeforeTime2(
+                      invitation.valid_from,
+                      new Date().toISOString()
+                    )
+                  ? "Late arrival"
+                  : "Expected arrival"}
               </td>
               <td>
-                {invitation.checked_out_at ? invitation.checked_out_at : "--"}
+                {invitation.checked_out_at
+                  ? moment(new Date(invitation.checked_out_at)).format("h:mm a")
+                  : invitation.checked_in_at
+                  ? "Currently in premise"
+                  : "--"}
               </td>
               <td>
-                {getLatestStatus(invitation.invitationstatus_set) ==
-                  INVITATION_STATUS.READY_FOR_CHECKIN && (
-                  <button className="btn  btn-sm">CHECK IN</button>
-                )}
-                {getLatestStatus(invitation.invitationstatus_set) ==
-                  INVITATION_STATUS.CHECKED_IN && (
-                  <div className="btn  btn-sm bg-red-600 text-white">
-                    CHECK OUT
-                  </div>
-                )}
+                <CustomActionComponent invitation={invitation} />
               </td>
             </tr>
           ))}
@@ -88,18 +91,3 @@ const InvitationTable: React.FC<InvitationTableProps> = ({
 };
 
 export default InvitationTable;
-
-function getLatestStatus(records: InvitationStatusData[]) {
-  if (!records || records.length === 0) {
-    return null;
-  }
-
-  // Sort records by created_at in descending order
-  const sortedRecords = records.sort(
-    (a, b) =>
-      new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-  );
-
-  // Return the first element (latest record)
-  return sortedRecords[0].current_status;
-}

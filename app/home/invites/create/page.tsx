@@ -92,6 +92,7 @@ export default function CreateInvite() {
       date: inviteData["date"] as string,
       time: inviteData["time"] as string,
       location: "",
+      visiting_person_id: null,
       purpose: inviteData["purpose"] as string,
     };
     setPassData(pass);
