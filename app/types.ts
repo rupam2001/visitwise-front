@@ -73,3 +73,10 @@ export type InvitationPassResponse = {
   message: string;
   data: InvitationPassData[];
 };
+
+export type NotificationData = {
+  text: string;
+  created_at: string;
+  notification_type: string;
+  is_read: boolean;
+};
