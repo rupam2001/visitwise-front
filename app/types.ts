@@ -75,6 +75,7 @@ export type InvitationPassResponse = {
 };
 
 export type NotificationData = {
+  id: string;
   text: string;
   created_at: string;
   notification_type: string;

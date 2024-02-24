@@ -38,7 +38,9 @@ export default function UsersPage() {
         }}
       />
       <br />
-      <UserTable userData={usersData} />
+      <div className="bg-white">
+        <UserTable userData={usersData} />
+      </div>
     </div>
   );
 }

@@ -47,6 +47,27 @@ export default function Navbar() {
       console.error(error);
     }
   };
+  const onClickNotificationBtn = async () => {
+    try {
+      const res = await fetch(ENDPOINT + "/notification/mark_as_read/", {
+        headers: getAuthHeaders(),
+        method: "PATCH",
+        body: JSON.stringify({
+          notification_ids: notification
+            .filter((n) => !n.is_read)
+            .map((n) => n.id),
+        }),
+      }).then((r) => r.json());
+
+      console.log(res, "response mark_as_read");
+      if (res.success) {
+        await fetchNotifications();
+      }
+      return res;
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <div className="navbar bg-base-100 shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]">
@@ -105,7 +126,11 @@ export default function Navbar() {
         </button>
         <div className="dropdown dropdown-bottom dropdown-end">
           {/* <div tabIndex={0} className="btn m-1">Click</div> */}
-          <button role="button" className="btn btn-ghost btn-circle ml-2">
+          <button
+            role="button"
+            className="btn btn-ghost btn-circle ml-2"
+            onClick={onClickNotificationBtn}
+          >
             <div className="indicator">
               <svg
                 xmlns="http://www.w3.org/2000/svg"

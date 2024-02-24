@@ -18,7 +18,7 @@ export default function Organization() {
   const [organizationData, setOrganizationData] =
     useState<organizationInf | null>(null);
 
-  const orgModelRef = useRef(null);
+  const orgModelRef: React.RefObject<HTMLDialogElement> = useRef(null);
 
   const fetchOrganizationData = async () => {
     try {
@@ -120,8 +120,8 @@ export default function Organization() {
   );
 
   return (
-    <div>
-      <div className="shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)] p-4 rounded-lg">
+    <div className="pt-4">
+      <div className=" bg-white shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)] p-4 rounded-lg">
         <div className="flex items-center">
           <div className="avatar placeholder">
             <div
@@ -138,7 +138,7 @@ export default function Organization() {
               {organizationData?.about}
             </div>
             <button
-              className="btn btn-xs mt-4"
+              className="btn btn-xs mt-4 bg-purple-500 text-white hover:bg-purple-500"
               onClick={() => {
                 orgModelRef.current?.showModal();
               }}

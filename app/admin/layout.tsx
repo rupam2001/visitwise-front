@@ -16,30 +16,37 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
 
   return (
     <div
-      className="min-h-screen min-w-screen flex flex-col bg-white"
+      className="min-h-screen min-w-screen flex flex-col bg-white_smoke"
       //   style={{ backgroundColor: "#F5F5F5" }}
     >
-      <div className="flex flex-col items-start justify-center p-2 pt-4">
-        <h1 className="text-slate-600 font-semibold text-4xl">VisitWise</h1>
-        <div className="divider"></div>
-      </div>
-      <div className="flex">
-        <div className="min-h-full w-64 p-2">
-          <div className="my-2 w-full flex flex-col items-center h-full py-4">
+      {/* <div className="flex flex-col items-start justify-center p-1 pt-2 pl-4 "></div> */}
+      <div className="flex min-h-screen">
+        <div className="min-h-full w-56 bg-white p-2">
+          <div className=" w-full flex flex-col items-center h-full py-4">
+            <h1 className="text-purple-600 font-semibold text-3xl">
+              VisitWise
+            </h1>
+            <div className="divider"></div>
             <Link href={"/admin/organization"} className="w-full">
               <div
                 className={`flex items-center rounded-lg ${
-                  pathname == "/admin/organization" ? "bg-purple-600" : ""
+                  pathname.includes("/admin/organization")
+                    ? "bg-purple-600"
+                    : ""
                 } bg-opacity-35 p-2   text-gray-700 font-semibold`}
               >
                 <FaSchool
                   className={` ${
-                    pathname == "/admin/organization" ? "text-purple-600" : ""
+                    pathname.includes("/admin/organization")
+                      ? "text-purple-600"
+                      : ""
                   } `}
                 />
                 <span
                   className={` ${
-                    pathname == "/admin/organization" ? "text-purple-600" : ""
+                    pathname.includes("/admin/organization")
+                      ? "text-purple-600"
+                      : ""
                   } ml-2 `}
                 >
                   Organization
@@ -49,17 +56,17 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
             <Link href={"/admin/users"} className="w-full mt-4">
               <div
                 className={`flex items-center rounded-lg ${
-                  pathname == "/admin/users" ? "bg-purple-600" : ""
+                  pathname.includes("/admin/users") ? "bg-purple-600" : ""
                 } bg-opacity-35 p-2   text-gray-700 font-semibold`}
               >
                 <FaUser
                   className={` ${
-                    pathname == "/admin/users" ? "text-purple-600" : ""
+                    pathname.includes("/admin/users") ? "text-purple-600" : ""
                   } `}
                 />
                 <span
                   className={` ${
-                    pathname == "/admin/users" ? "text-purple-600" : ""
+                    pathname.includes("/admin/users") ? "text-purple-600" : ""
                   } ml-2 `}
                 >
                   Users
@@ -74,12 +81,16 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
               >
                 <FaChartArea
                   className={` ${
-                    pathname == "/admin/analytics" ? "text-purple-600" : ""
+                    pathname.includes("/admin/analytics")
+                      ? "text-purple-600"
+                      : ""
                   } `}
                 />
                 <span
                   className={` ${
-                    pathname == "/admin/analytics" ? "text-purple-600" : ""
+                    pathname.includes("/admin/analytics")
+                      ? "text-purple-600"
+                      : ""
                   } ml-2 `}
                 >
                   Analytics

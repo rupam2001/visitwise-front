@@ -164,3 +164,195 @@ export function isTime1BeforeTime2(
   // Compare the two dates
   return date1 < date2;
 }
+
+export function getRelativeDate(ago: number): string {
+  const currentDate = new Date();
+
+  // Set the number of milliseconds for the past date (e.g., 1 day ago)
+  const millisecondsInOneDay = 24 * 60 * 60 * 1000 * ago; // 24 hours * 60 minutes * 60 seconds * 1000 milliseconds
+  const pastDateMilliseconds = currentDate.getTime() - millisecondsInOneDay;
+
+  // Create a new Date object for the past date
+  const pastDate = new Date(pastDateMilliseconds);
+  return pastDate.toUTCString();
+}
+
+export function convertUtcToDateString(utcTimeString: string): string {
+  const utcDate = new Date(utcTimeString);
+  const year = utcDate.getUTCFullYear();
+  const month = String(utcDate.getUTCMonth() + 1).padStart(2, "0");
+  const day = String(utcDate.getUTCDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+}
+
+export function convertBroswerToUTC(dateString: string): string | null {
+  const userDate = new Date(`${dateString}T00:00:00`);
+
+  if (isNaN(userDate.getTime())) {
+    console.error("Invalid date format");
+    return null;
+  }
+
+  const userTimezoneOffset = userDate.getTimezoneOffset();
+  const utcTimestamp = userDate.getTime() + userTimezoneOffset * 60000;
+
+  const utcDate = new Date(utcTimestamp);
+
+  return utcDate.toISOString().split("T")[0];
+}
+
+export function convertToLocalDateFormat(localDateString: string) {
+  const localDate = new Date(localDateString);
+
+  // Check if the date is valid
+  if (isNaN(localDate.getTime())) {
+    console.error("Invalid date format");
+    return null;
+  }
+
+  const year = localDate.getFullYear();
+  const month = String(localDate.getMonth() + 1).padStart(2, "0");
+  const day = String(localDate.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+}
+
+export function getDatesInRange(
+  startDateStr: string,
+  endDateStr: string
+): string[] | null {
+  // Convert start and end date strings to Date objects
+  const startDate = new Date(`${startDateStr}T00:00:00`);
+  const endDate = new Date(`${endDateStr}T00:00:00`);
+
+  // Check if the date strings are valid
+  if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+    console.error("Invalid date format");
+    return null;
+  }
+
+  const datesInRange: string[] = [];
+  let currentDate = new Date(startDate);
+
+  // Iterate through dates and add them to the array
+  while (currentDate <= endDate) {
+    datesInRange.push(new Date(currentDate).toUTCString());
+    currentDate.setUTCDate(currentDate.getUTCDate() + 1); // Move to the next day
+  }
+
+  return datesInRange;
+}
+
+export function convertUtcToBrowserDate(utcTimeString: string): string | null {
+  // Create a Date object from the UTC time string
+  const utcDate = new Date(utcTimeString);
+
+  // Check if the date is valid
+  if (isNaN(utcDate.getTime())) {
+    console.error("Invalid date format");
+    return null;
+  }
+
+  // Get the browser's timezone offset in minutes
+  const browserTimezoneOffset = new Date().getTimezoneOffset();
+
+  // Calculate the new date in the browser's timezone
+  const browserDate = new Date(
+    utcDate.getTime() - browserTimezoneOffset * 60000
+  );
+
+  // Extract year, month, and day components
+  const year = browserDate.getFullYear();
+  const month = String(browserDate.getMonth() + 1).padStart(2, "0");
+  const day = String(browserDate.getDate()).padStart(2, "0");
+
+  // Format the date as 'YYYY-MM-DD'
+  const formattedDate = `${year}-${month}-${day}`;
+
+  return formattedDate;
+}
+
+export function getDatesInRange2(
+  startDateStr: string,
+  endDateStr: string
+): { utcDates: string[] | null; localDates: string[] | null } {
+  // Convert start and end date strings to Date objects
+  const startDate = new Date(`${startDateStr}T00:00:00`);
+  const endDate = new Date(`${endDateStr}T00:00:00`);
+
+  // Check if the date strings are valid
+  if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+    console.error("Invalid date format");
+    return { utcDates: null, localDates: null };
+  }
+
+  const utcDates: string[] = [];
+  const localDates: string[] = [];
+  let currentDate = new Date(startDate);
+
+  // Iterate through dates and add them to the arrays
+  while (currentDate <= endDate) {
+    const utcDateStr = convertToDateFormat(new Date(currentDate).toUTCString());
+    let localDateStr = convertToDateFormat(
+      new Date(currentDate).toLocaleDateString()
+    );
+
+    utcDates.push(utcDateStr);
+    localDateStr =
+      localDateStr.split("-")[0] +
+      "-" +
+      localDateStr.split("-")[2] +
+      "-" +
+      localDateStr.split("-")[1];
+    localDates.push(localDateStr);
+
+    currentDate.setUTCDate(currentDate.getUTCDate() + 1); // Move to the next day
+  }
+
+  return { utcDates, localDates };
+}
+
+function convertToDateFormat(dateString: string): string {
+  const date = new Date(dateString);
+  const year = date.getUTCFullYear();
+  const month = String(date.getUTCMonth() + 1).padStart(2, "0");
+  const day = String(date.getUTCDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+export function getDatesInRange3(
+  startDateStr: string,
+  endDateStr: string
+): string[] | null {
+  // Convert start and end date strings to Date objects
+  const startDate = new Date(`${startDateStr}T00:00:00`);
+  const endDate = new Date(`${endDateStr}T00:00:00`);
+
+  // Check if the date strings are valid
+  if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+    console.error("Invalid date format");
+    return null;
+  }
+
+  const datesInRange: string[] = [];
+  let currentDate = new Date(startDate);
+
+  // Iterate through dates and add them to the array
+  while (currentDate <= endDate) {
+    datesInRange.push(
+      convertToDateFormat2(new Date(currentDate).toUTCString())
+    );
+    currentDate.setUTCDate(currentDate.getUTCDate() + 1); // Move to the next day
+  }
+
+  return datesInRange;
+}
+
+function convertToDateFormat2(dateString: string): string {
+  const date = new Date(dateString);
+  const year = date.getUTCFullYear();
+  const month = String(date.getUTCMonth() + 1).padStart(2, "0");
+  const day = String(date.getUTCDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}

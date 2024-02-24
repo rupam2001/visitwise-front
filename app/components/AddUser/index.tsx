@@ -14,7 +14,7 @@ interface AddUserProps {
 const AddUser: React.FC<AddUserProps> = ({ addUserCallback }) => {
   const [loading, setIsLoading] = useState<boolean>(false);
 
-  const modelRef = useRef(null);
+  const modelRef: React.RefObject<HTMLDialogElement> = useRef(null);
   const formRef = useRef<HTMLFormElement>(null);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -147,7 +147,7 @@ const AddUser: React.FC<AddUserProps> = ({ addUserCallback }) => {
     <div className="rounded-lg p-4">
       <div className="w-full flex justify-end">
         <button
-          className="btn"
+          className="btn bg-purple-500 text-white"
           onClick={() => {
             modelRef.current?.showModal();
           }}
