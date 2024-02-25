@@ -1,18 +1,67 @@
+import { ENDPOINT } from "@/app/constants";
+import {
+  JSONObject,
+  convertUtcToBrowserTime,
+  downloadCsv,
+  getAuthHeaders,
+  textShortner,
+} from "@/app/utils";
+import moment from "moment";
 import * as React from "react";
 import { FaDownload } from "react-icons/fa";
 
-interface SummaryTableProps {}
+interface SummaryTableProps {
+  start_date: string;
+  end_date: string;
+}
 
-const VisitSummaryTable: React.FC<SummaryTableProps> = ({}) => {
+const VisitSummaryTable: React.FC<SummaryTableProps> = ({
+  start_date,
+  end_date,
+}) => {
+  const [summaryData, setSummaryData] = React.useState<JSONObject[]>([]);
+
+  const loadData = async () => {
+    try {
+      const res = await fetch(ENDPOINT + "/analytics/get_summary_table/", {
+        method: "POST",
+        headers: getAuthHeaders(),
+        body: JSON.stringify({ start_date, end_date }),
+      }).then((r) => r.json());
+
+      if (res.success) {
+        setSummaryData(res.data);
+      }
+    } catch (error) {}
+  };
+  React.useEffect(() => {
+    loadData();
+  }, [start_date, end_date]);
+
   return (
     <div>
       <div className="w-full flex items-center">
-        <h1 className="font-bold mt-2 ml-2 flex-1">Summary Table</h1>
-        <FaDownload className="text-gray-500 mr-4 cursor-pointer hover:text-gray-700" />
+        <div className="flex-1 flex">
+          <h1 className="font-bold mt-2 ml-2 ">Summary Table</h1>
+          <span className="text-xs text-gray-500 italic">
+            ({moment(start_date).format("ll")} - {moment(end_date).format("ll")}
+            )
+          </span>
+        </div>
+        <FaDownload
+          className="text-gray-500 mr-4 cursor-pointer hover:text-gray-700 tooltip"
+          onClick={() =>
+            downloadCsv(
+              summaryData,
+              `summary_data-${start_date}-to-${end_date}.csv`
+            )
+          }
+          data-tip="Download as csv"
+        />
       </div>
       <div className="divider"></div>
       <div className="overflow-x-auto">
-        <table className="table table-xs">
+        <table className="table text-xs">
           <thead>
             <tr>
               <th></th>
@@ -30,198 +79,29 @@ const VisitSummaryTable: React.FC<SummaryTableProps> = ({}) => {
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <th>1</th>
-              <td>Cy Ganderton</td>
-              <td>Quality Control Specialist</td>
-              <td>Littel, Schaden and Vandervort</td>
-              <td>Canada</td>
-              <td>12/16/2020</td>
-              <td>Blue</td>
-            </tr>
-            <tr>
-              <th>2</th>
-              <td>Hart Hagerty</td>
-              <td>Desktop Support Technician</td>
-              <td>Zemlak, Daniel and Leannon</td>
-              <td>United States</td>
-              <td>12/5/2020</td>
-              <td>Purple</td>
-            </tr>
-            <tr>
-              <th>3</th>
-              <td>Brice Swyre</td>
-              <td>Tax Accountant</td>
-              <td>Carroll Group</td>
-              <td>China</td>
-              <td>8/15/2020</td>
-              <td>Red</td>
-            </tr>
-            <tr>
-              <th>4</th>
-              <td>Marjy Ferencz</td>
-              <td>Office Assistant I</td>
-              <td>Rowe-Schoen</td>
-              <td>Russia</td>
-              <td>3/25/2021</td>
-              <td>Crimson</td>
-            </tr>
-            <tr>
-              <th>5</th>
-              <td>Yancy Tear</td>
-              <td>Community Outreach Specialist</td>
-              <td>Wyman-Ledner</td>
-              <td>Brazil</td>
-              <td>5/22/2020</td>
-              <td>Indigo</td>
-            </tr>
-            <tr>
-              <th>6</th>
-              <td>Irma Vasilik</td>
-              <td>Editor</td>
-              <td>Wiza, Bins and Emard</td>
-              <td>Venezuela</td>
-              <td>12/8/2020</td>
-              <td>Purple</td>
-            </tr>
-            <tr>
-              <th>7</th>
-              <td>Meghann Durtnal</td>
-              <td>Staff Accountant IV</td>
-              <td>Schuster-Schimmel</td>
-              <td>Philippines</td>
-              <td>2/17/2021</td>
-              <td>Yellow</td>
-            </tr>
-            <tr>
-              <th>8</th>
-              <td>Sammy Seston</td>
-              <td>Accountant I</td>
-              <td>O'Hara, Welch and Keebler</td>
-              <td>Indonesia</td>
-              <td>5/23/2020</td>
-              <td>Crimson</td>
-            </tr>
-            <tr>
-              <th>9</th>
-              <td>Lesya Tinham</td>
-              <td>Safety Technician IV</td>
-              <td>Turner-Kuhlman</td>
-              <td>Philippines</td>
-              <td>2/21/2021</td>
-              <td>Maroon</td>
-            </tr>
-            <tr>
-              <th>10</th>
-              <td>Zaneta Tewkesbury</td>
-              <td>VP Marketing</td>
-              <td>Sauer LLC</td>
-              <td>Chad</td>
-              <td>6/23/2020</td>
-              <td>Green</td>
-            </tr>
-            <tr>
-              <th>11</th>
-              <td>Andy Tipple</td>
-              <td>Librarian</td>
-              <td>Hilpert Group</td>
-              <td>Poland</td>
-              <td>7/9/2020</td>
-              <td>Indigo</td>
-            </tr>
-            <tr>
-              <th>12</th>
-              <td>Sophi Biles</td>
-              <td>Recruiting Manager</td>
-              <td>Gutmann Inc</td>
-              <td>Indonesia</td>
-              <td>2/12/2021</td>
-              <td>Maroon</td>
-            </tr>
-            <tr>
-              <th>13</th>
-              <td>Florida Garces</td>
-              <td>Web Developer IV</td>
-              <td>Gaylord, Pacocha and Baumbach</td>
-              <td>Poland</td>
-              <td>5/31/2020</td>
-              <td>Purple</td>
-            </tr>
-            <tr>
-              <th>14</th>
-              <td>Maribeth Popping</td>
-              <td>Analyst Programmer</td>
-              <td>Deckow-Pouros</td>
-              <td>Portugal</td>
-              <td>4/27/2021</td>
-              <td>Aquamarine</td>
-            </tr>
-            <tr>
-              <th>15</th>
-              <td>Moritz Dryburgh</td>
-              <td>Dental Hygienist</td>
-              <td>Schiller, Cole and Hackett</td>
-              <td>Sri Lanka</td>
-              <td>8/8/2020</td>
-              <td>Crimson</td>
-            </tr>
-            <tr>
-              <th>16</th>
-              <td>Reid Semiras</td>
-              <td>Teacher</td>
-              <td>Sporer, Sipes and Rogahn</td>
-              <td>Poland</td>
-              <td>7/30/2020</td>
-              <td>Green</td>
-            </tr>
-            <tr>
-              <th>17</th>
-              <td>Alec Lethby</td>
-              <td>Teacher</td>
-              <td>Reichel, Glover and Hamill</td>
-              <td>China</td>
-              <td>2/28/2021</td>
-              <td>Khaki</td>
-            </tr>
-            <tr>
-              <th>18</th>
-              <td>Aland Wilber</td>
-              <td>Quality Control Specialist</td>
-              <td>Kshlerin, Rogahn and Swaniawski</td>
-              <td>Czech Republic</td>
-              <td>9/29/2020</td>
-              <td>Purple</td>
-            </tr>
-            <tr>
-              <th>19</th>
-              <td>Teddie Duerden</td>
-              <td>Staff Accountant III</td>
-              <td>Pouros, Ullrich and Windler</td>
-              <td>France</td>
-              <td>10/27/2020</td>
-              <td>Aquamarine</td>
-            </tr>
-            <tr>
-              <th>20</th>
-              <td>Lorelei Blackstone</td>
-              <td>Data Coordiator</td>
-              <td>Witting, Kutch and Greenfelder</td>
-              <td>Kazakhstan</td>
-              <td>6/3/2020</td>
-              <td>Red</td>
-            </tr>
+            {summaryData.map((data, index) => (
+              <tr className="hover:bg-gray-50">
+                <th>{index + 1}</th>
+                <th>{data["name"]}</th>
+                <th>{data["visiting_person_name"]}</th>
+                <th>{data["visting_person_email"]}</th>
+                <th>
+                  {convertUtcToBrowserTime(data["check_in_at"] as string)}
+                </th>
+                <th>
+                  {convertUtcToBrowserTime(data["check_out_at"] as string)}
+                </th>
+                <th>{data["email"]}</th>
+                <th>{data["phone"]}</th>
+                <th>{data["address"]}</th>
+                <th className="tooltip" data-tip={data["purpose"]}>
+                  {textShortner(data["purpose"] as string, 10)}
+                </th>
+                <th>{textShortner(data["feedback"] as string, 10)}</th>
+                <th>{textShortner(data["rating"] as string)}</th>
+              </tr>
+            ))}
           </tbody>
-          <tfoot>
-            <tr>
-              <th></th>
-              <th>Name</th>
-              <th>Job</th>
-              <th>company</th>
-              <th>location</th>
-              <th>Last Login</th>
-              <th>Favorite Color</th>
-            </tr>
-          </tfoot>
         </table>
       </div>
     </div>

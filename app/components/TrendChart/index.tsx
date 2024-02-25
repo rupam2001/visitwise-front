@@ -111,13 +111,13 @@ const TrendChart: React.FC<TrendChartProps> = ({
           stepSize: 1,
         },
         grid: {
-          display: false,
+          display: !false,
         },
       },
       x: {
         display: true,
         grid: {
-          display: false,
+          display: !false,
         },
         ticks: {
           //   maxRotation: 45, // Set the maximum rotation angle

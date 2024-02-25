@@ -104,7 +104,8 @@ export default function Analytics() {
           />
         </div>
         <div className="flex">
-          <div className="h-80  p-2 bg-white rounded-lg w-1/2 shadow-[rgba(13,_38,_76,_0.19)_0px_9px_20px]">
+          <div className="max-h-96  p-2 bg-white rounded-lg w-1/2 shadow-[rgba(13,_38,_76,_0.19)_0px_9px_20px]">
+            <div className="h-14"></div>
             <TrendChart
               invitationData={invitationData}
               start_date={timeRange.start_date}
@@ -112,7 +113,7 @@ export default function Analytics() {
               title="Visitors by day"
             />
           </div>
-          <div className="h-80 w-1/2 flex justify-center shadow-[rgba(13,_38,_76,_0.19)_0px_9px_20px] bg-white ml-4 rounded-lg p-2">
+          <div className="h-96 w-1/2 flex justify-center shadow-[rgba(13,_38,_76,_0.19)_0px_9px_20px] bg-white ml-4 rounded-lg p-2">
             <TopVisitedPersonChart
               start_date={timeRange.start_date}
               end_date={timeRange.end_date}
@@ -120,7 +121,10 @@ export default function Analytics() {
           </div>
         </div>
         <div className="bg-white shadow-[rgba(13,_38,_76,_0.19)_0px_9px_20px] mt-4 p-2 rounded-lg overflow-auto">
-          <VisitSummaryTable />
+          <VisitSummaryTable
+            start_date={timeRange.start_date}
+            end_date={timeRange.end_date}
+          />
         </div>
       </div>
     </div>

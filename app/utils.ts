@@ -39,7 +39,7 @@ export const wrapWithSkeleton = (className: string, isSkeleton: Boolean) =>
   isSkeleton ? "skeleton " + className : className;
 
 export interface JSONObject {
-  [key: string]: string | number | null;
+  [key: string]: string | number | boolean | null;
 }
 
 export function hasEmptyFields(jsonObject: JSONObject): boolean {
@@ -355,4 +355,41 @@ function convertToDateFormat2(dateString: string): string {
   const month = String(date.getUTCMonth() + 1).padStart(2, "0");
   const day = String(date.getUTCDate()).padStart(2, "0");
   return `${year}-${month}-${day}`;
+}
+
+export function textShortner(text: string, maxLen: number = 20) {
+  if (!text) return "--";
+  if (text.length <= maxLen) return text;
+  return text.slice(0, maxLen) + "...";
+}
+
+export function downloadCsv(data: JSONObject[], fileName: string): void {
+  const csvContent = convertToCsv(data);
+  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+
+  // Create a link element to trigger the download
+  const link = document.createElement("a");
+  if (link.download !== undefined) {
+    const url = URL.createObjectURL(blob);
+    link.setAttribute("href", url);
+    link.setAttribute("download", fileName);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  } else {
+    console.error("Downloading CSV is not supported in this browser.");
+  }
+}
+
+function convertToCsv(data: JSONObject[]): string {
+  // Extract headers from the first object
+  const headers = Object.keys(data[0]);
+
+  // Convert data to CSV rows
+  const rows = data.map((obj) => headers.map((key) => obj[key]).join(","));
+
+  // Combine headers and rows
+  const csvContent = [headers.join(","), ...rows].join("\n");
+
+  return csvContent;
 }

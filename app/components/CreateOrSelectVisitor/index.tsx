@@ -4,6 +4,8 @@ import { JSONObject, getAuthHeaders } from "@/app/utils";
 import React, { FormEventHandler, useEffect, useState } from "react";
 import { FaAddressBook, FaBuilding, FaPhone, FaUser } from "react-icons/fa";
 
+import { useRouter } from "next/navigation";
+
 interface PropsIntf {
   onSubmitCallback: FormEventHandler;
   defaultValues: JSONObject;
@@ -19,6 +21,7 @@ const CreateOrSelectVisitor: React.FC<PropsIntf> = ({
   SUGGESTED_VISITOR_ENDPOINT,
   SEARCH_VISITOR_ENDPOINT,
 }) => {
+  const router = useRouter();
   const placeholderVisitors = Array.from({ length: 4 }, (_) => ({
     placeholder: "yes",
   }));
@@ -150,6 +153,12 @@ const CreateOrSelectVisitor: React.FC<PropsIntf> = ({
           </label>
         </div>
         <div className=" mt-4 flex w-full">
+          <button
+            className="btn text-red-700 mr-2"
+            onClick={() => router.back()}
+          >
+            Cancel
+          </button>
           <button className="btn text-purple-700" type="submit">
             Next
           </button>
@@ -157,7 +166,7 @@ const CreateOrSelectVisitor: React.FC<PropsIntf> = ({
       </form>
       <div className="pr-32 mt-8">
         <div className="divider divider-start text-blue-800">
-          Suggested visitors{" "}
+          Your Visitors{" "}
           <label className="input input-bordered flex items-center gap-2 text-black">
             <input
               type="text"
@@ -178,7 +187,7 @@ const CreateOrSelectVisitor: React.FC<PropsIntf> = ({
             </svg>
           </label>
         </div>
-        <div className="flex overflow-x-auto w-2/3  mt-8 p-2">
+        <div className="flex overflow-x-auto w-full  mt-8 p-2">
           {suggestedVisitors.slice(0, 5).map((sv) => (
             <div
               className="mr-6 flex flex-col items-center p-1 cursor-pointer hover:text-blue-700 "
