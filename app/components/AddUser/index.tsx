@@ -113,7 +113,9 @@ const AddUser: React.FC<AddUserProps> = ({ addUserCallback }) => {
                   <option disabled selected>
                     Select the role
                   </option>
+                  <option>MEMBER</option>
                   <option>EMPLOYEE</option>
+
                   <option>SECURITY</option>
                   <option>ADMIN</option>
                 </select>
@@ -147,7 +149,7 @@ const AddUser: React.FC<AddUserProps> = ({ addUserCallback }) => {
     <div className="rounded-lg p-4">
       <div className="w-full flex justify-end">
         <button
-          className="btn bg-purple-500 text-white"
+          className="btn bg-purple-600 text-white hover:bg-purple-500"
           onClick={() => {
             modelRef.current?.showModal();
           }}

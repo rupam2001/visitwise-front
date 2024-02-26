@@ -51,12 +51,12 @@ const Metrics: React.FC<MetricProps> = ({ start_date, end_date }) => {
       </div>
 
       <div className="stat">
-        <div className="stat-title">Walkin Visitors</div>
+        <div className="stat-title">Walkin Visits</div>
         <div className="stat-value">{metricsData?.total_walkin_visits}</div>
         {/* <div className="stat-desc">↘︎ 90 (14%)</div> */}
       </div>
       <div className="stat">
-        <div className="stat-title">Invited Visitors</div>
+        <div className="stat-title">Invited Visits</div>
         <div className="stat-value">{metricsData?.total_invited_visits}</div>
         {/* <div className="stat-desc">↘︎ 92 (14%)</div> */}
       </div>

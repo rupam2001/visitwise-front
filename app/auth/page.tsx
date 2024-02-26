@@ -82,7 +82,7 @@ export default function Auth() {
         if (res.success) {
           //to home page
 
-          router.replace("/home");
+          router.replace("/home/invites");
         }
       }
     } catch (error) {

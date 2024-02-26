@@ -27,7 +27,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
               VisitWise
             </h1>
             <div className="divider"></div>
-            <Link href={"/admin/organization"} className="w-full">
+            {/* <Link href={"/admin/organization"} className="w-full">
               <div
                 className={`flex items-center rounded-lg ${
                   pathname.includes("/admin/organization")
@@ -52,7 +52,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
                   Organization
                 </span>
               </div>
-            </Link>
+            </Link> */}
             <Link href={"/admin/users"} className="w-full mt-4">
               <div
                 className={`flex items-center rounded-lg ${

@@ -346,7 +346,7 @@ export function getDatesInRange3(
     currentDate.setUTCDate(currentDate.getUTCDate() + 1); // Move to the next day
   }
 
-  return datesInRange;
+  return [...datesInRange, endDateStr];
 }
 
 function convertToDateFormat2(dateString: string): string {

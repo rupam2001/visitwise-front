@@ -5,6 +5,7 @@ import { ENDPOINT } from "@/app/constants";
 import { User } from "@/app/types";
 import { getAuthHeaders } from "@/app/utils";
 import * as React from "react";
+import Organization from "../organization/page";
 
 export default function UsersPage() {
   const [usersData, setUsersData] = React.useState<User[]>([]);
@@ -32,13 +33,14 @@ export default function UsersPage() {
   }, []);
   return (
     <div>
-      <AddUser
-        addUserCallback={() => {
-          loadUsersData();
-        }}
-      />
-      <br />
-      <div className="bg-white">
+      <Organization />
+
+      <div className="bg-white mt-2">
+        <AddUser
+          addUserCallback={() => {
+            loadUsersData();
+          }}
+        />
         <UserTable userData={usersData} />
       </div>
     </div>
