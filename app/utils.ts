@@ -20,6 +20,11 @@ export const saveAuthToken = (token: string) => {
 };
 export const getAuthToken = () => Cookies.get("token");
 
+export const saveDeviceToken = (token: string) => {
+  Cookies.set("device_token", token);
+};
+export const getDeviceToken = () => Cookies.get("device_token");
+
 export const API = () => {
   const headers = {
     "Content-Type": "application/json",

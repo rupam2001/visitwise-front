@@ -42,6 +42,7 @@ const CheckIn: React.FC<CheckInPorps> = ({ invitation, closeModal }) => {
         }
       ).then((r) => r.json());
       if (res.success) {
+        alert(res.message);
         await loadTodaysData(); // reloading the enitre data
         closeModal();
       }
@@ -89,7 +90,7 @@ const CheckIn: React.FC<CheckInPorps> = ({ invitation, closeModal }) => {
           <tbody>
             {/* row 1 */}
             {belongings.map((item, index) => (
-              <tr>
+              <tr key={index}>
                 <th>{index + 1}</th>
                 <td>
                   <input

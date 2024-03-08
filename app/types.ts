@@ -68,6 +68,7 @@ export type InvitationPassData = {
   };
   invitationstatus_set: [InvitationStatusData];
   belongings: [Belongings];
+  passkey: string;
 };
 
 export type InvitationPassResponse = {

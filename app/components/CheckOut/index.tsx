@@ -52,7 +52,7 @@ const CheckOut: React.FC<CheckOutProps> = ({ invitation, closeModal }) => {
           <tbody>
             {/* row 1 */}
             {invitation.belongings.map((item, index) => (
-              <tr>
+              <tr key={index}>
                 <th>{index + 1}</th>
                 <td>
                   <input

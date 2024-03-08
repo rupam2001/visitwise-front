@@ -157,7 +157,7 @@ const TopVisitedPersonChart: React.FC<TopVisitedPersonChartProps> = ({
           }}
         >
           {generatePastYears().map((y) => (
-            <option>{y}</option>
+            <option key={y}>{y}</option>
           ))}
         </select>
       </div>

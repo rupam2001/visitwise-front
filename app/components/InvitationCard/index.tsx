@@ -6,6 +6,10 @@ import {
   textShortner,
 } from "@/app/utils";
 import moment from "moment";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import QRCode from "react-qr-code";
+
 import * as React from "react";
 interface InvitationCardProps {
   invitation: InvitationPassData;
@@ -17,6 +21,23 @@ const InvitationCard: React.FC<InvitationCardProps> = ({
   FooterComponent,
 }) => {
   const modalRef: React.RefObject<HTMLDialogElement> = React.useRef(null);
+  const [showModal, setShowModal] = React.useState(false);
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  React.useEffect(() => {
+    if (searchParams.get("invitation") === String(invitation.id)) {
+      modalRef.current?.showModal();
+    }
+  }, []);
+
+  const createQRCodeContent = () => {
+    const content = {
+      token: invitation.passkey,
+    };
+
+    return JSON.stringify(content);
+  };
 
   const showStatus = () => (
     <div>
@@ -38,7 +59,16 @@ const InvitationCard: React.FC<InvitationCardProps> = ({
       )}
       {getLatestStatus(invitation.invitationstatus_set) ==
         INVITATION_STATUS.PENDING_APPROVAL && (
-        <span className="text-blue-500">Pending approval</span>
+        <>
+          {new Date().getUTCDay() >
+          new Date(invitation.valid_from).getUTCDay() ? (
+            <span className="text-red-500">Approval missed</span>
+          ) : (
+            <Link href={"/home/requests"}>
+              <span className="text-blue-500">Pending approval</span>
+            </Link>
+          )}
+        </>
       )}
       {getLatestStatus(invitation.invitationstatus_set) ==
         INVITATION_STATUS.REJECTED && (
@@ -51,7 +81,10 @@ const InvitationCard: React.FC<InvitationCardProps> = ({
     <div
       className="max-w-xs w-72 cursor-pointer"
       onClick={() => {
-        if (!FooterComponent) modalRef.current?.showModal();
+        if (!FooterComponent) {
+          router.push("/home/invites?invitation=" + invitation.id);
+          modalRef.current?.showModal();
+        }
       }}
     >
       <div className="bg-white hover:shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)] rounded-lg py-3">
@@ -112,37 +145,64 @@ const InvitationCard: React.FC<InvitationCardProps> = ({
       </div>
       <dialog id="my_modal_3" className="modal" ref={modalRef}>
         <div className="modal-box">
-          <form method="dialog">
+          <form
+            method="dialog"
+            onSubmit={(e) => {
+              //   e.preventDefault();
+              router.push("/home/invites");
+            }}
+          >
             {/* if there is a button in form, it will close the modal */}
             <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
               ✕
             </button>
           </form>
-          <div>
+          <div className="">
             <h1 className="text-xl font-semibold">
               {invitation.visitor.first_name +
                 " " +
                 invitation.visitor.last_name}
             </h1>
             <div className="divider"></div>
-            <div>
-              <span>Purpose: </span>
-              {invitation.purpose}
-            </div>
-            <div>
-              Checked in:{" "}
-              {invitation.checked_in_at
-                ? convertUtcToBrowserDate(invitation.checked_in_at)
-                : "--"}
-            </div>
-            <div>
-              Checked out:{" "}
-              {invitation.checked_out_at
-                ? convertUtcToBrowserDate(invitation.checked_out_at)
-                : "--"}
-            </div>
-            <div className="flex">
-              <span className="mr-2">Status</span> {showStatus()}
+            <div className="flex flex-col justify-start w-full h-full">
+              <div>
+                <span className="font-semibold">Purpose: </span>
+                {invitation.purpose}
+              </div>
+              <div>
+                <span className="font-semibold">Checked in: </span>
+                {invitation.checked_in_at
+                  ? convertUtcToBrowserDate(invitation.checked_in_at)
+                  : "--"}
+              </div>
+              <div>
+                <span className="font-semibold">Checked out: </span>
+                {invitation.checked_out_at
+                  ? convertUtcToBrowserDate(invitation.checked_out_at)
+                  : "--"}
+              </div>
+              <div className="flex">
+                <span className="mr-2 font-semibold">Status</span>{" "}
+                {showStatus()}
+              </div>
+              <div>
+                <span className="font-semibold">QR code for entry:</span>
+                <div
+                  style={{
+                    height: "auto",
+                    margin: "0 auto",
+                    maxWidth: 100,
+                    width: "100%",
+                  }}
+                >
+                  <QRCode
+                    size={256}
+                    style={{ height: "auto", maxWidth: "100%", width: "100%" }}
+                    value={createQRCodeContent()}
+                    viewBox={`0 0 256 256`}
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>

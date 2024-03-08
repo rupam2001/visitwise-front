@@ -7,8 +7,8 @@ import {
 } from "../types";
 import { JSONObject, getAuthHeaders, getTodayDateInUTC } from "../utils";
 import { ENDPOINT } from "../constants";
-import { INVITES_NAME } from "./invites/page";
-import { REQUEST_NAME } from "./requests/page";
+import { INVITES_NAME } from "../constants";
+import { REQUEST_NAME } from "../constants";
 
 // Define the type for your context value
 type UserContextType = {
@@ -18,7 +18,7 @@ type UserContextType = {
   >;
   invitations: InvitationPassData[];
   setInvitations: React.Dispatch<React.SetStateAction<InvitationPassData[]>>;
-  loadInvitations: () => void;
+  loadInvitations: (page: number) => Promise<any>;
   loadInvitationRequests: () => void;
   notifications: NotificationData[];
   loadNotifications: () => void;
@@ -107,7 +107,7 @@ export const UserContextProvider: React.FC<UserContextProviderType> = ({
 
       console.log(res, "response mark_as_read");
       if (res.success) {
-        await loadNotifications();
+        // await loadNotifications();
       }
       return res;
     } catch (error) {
@@ -129,17 +129,17 @@ export const UserContextProvider: React.FC<UserContextProviderType> = ({
       removeLoader(REQUEST_NAME);
     }
   };
-  const loadInvitations = async () => {
+  const loadInvitations = async (page: number = 1) => {
     addLoader(INVITES_NAME);
     try {
-      const res = await fetch(ENDPOINT + "/invitation/get_history/", {
+      const res = await fetch(ENDPOINT + "/invitation/get_history/" + page, {
         method: "GET",
         headers: getAuthHeaders(),
       }).then((r) => r.json());
       if (res.success) {
         setInvitations(res.data);
         removeLoader(INVITES_NAME);
-        return res;
+        return { ...res };
       }
     } catch (error) {
       removeLoader(INVITES_NAME);

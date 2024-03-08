@@ -80,7 +80,7 @@ const VisitSummaryTable: React.FC<SummaryTableProps> = ({
           </thead>
           <tbody>
             {summaryData.map((data, index) => (
-              <tr className="hover:bg-gray-50">
+              <tr className="hover:bg-gray-50" key={index}>
                 <th>{index + 1}</th>
                 <th>{data["name"]}</th>
                 <th>{data["visiting_person_name"]}</th>

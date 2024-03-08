@@ -74,22 +74,25 @@ const TopBar = () => {
           tabIndex={0}
           className="dropdown-content z-[1] menu p-2 shadow-[rgba(50,50,93,0.25)_0px_6px_12px_-2px,_rgba(0,0,0,0.3)_0px_3px_7px_-3px] bg-base-100 rounded-box w-72"
         >
-          {Array.from(new Set([...notifications, ...oldNotifications])).map(
-            (n) => (
-              <li className=" ">
-                <a
-                  className="flex flex-col justify-start items-start"
-                  dangerouslySetInnerHTML={{
-                    __html:
-                      n.text +
-                      `<span style="color:#1770e6"> ${moment(
-                        convertUtcToBrowserDate(n.created_at)
-                      ).format("ll")}</span>`,
-                  }}
-                ></a>
-              </li>
-            )
-          )}
+          {Array.from(
+            new Set([
+              ...notifications,
+              ...oldNotifications.slice(1, oldNotifications.length),
+            ])
+          ).map((n) => (
+            <li className=" " key={n.id}>
+              <a
+                className="flex flex-col justify-start items-start"
+                dangerouslySetInnerHTML={{
+                  __html:
+                    n.text +
+                    `<span style="color:#1770e6"> ${moment(
+                      convertUtcToBrowserDate(n.created_at)
+                    ).format("ll")}</span>`,
+                }}
+              ></a>
+            </li>
+          ))}
           {oldNotifications.length == 0 && (
             <div
               className="btn btn-link no-underline text-center"

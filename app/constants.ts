@@ -1,5 +1,8 @@
 export const ENDPOINT: String = "http://localhost:8000/api";
 
+export const WEBSOCKET_ENDPOINT: string =
+  "ws://localhost:8000/ws/realtime_invitations";
+
 const INVITATION_STATUS = {
   UNKNOWN: "UNKNOWN",
   PENDING_APPROVAL: "PENDING_APPROVAL",
@@ -11,5 +14,8 @@ const INVITATION_STATUS = {
   CHECKED_OUT: "CHECKED_OUT",
   PENDING_REVIEW: "PENDING_REVIEW",
 } as const;
+
+export const INVITES_NAME = "INVITES";
+export const REQUEST_NAME = "REQUESTS";
 
 export { INVITATION_STATUS };

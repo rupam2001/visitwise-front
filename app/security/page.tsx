@@ -5,6 +5,8 @@ import Link from "next/link";
 import { BiCollapse } from "react-icons/bi";
 import WalkInProcess from "../components/WalkInProcess";
 import { useRouter } from "next/navigation";
+import { FaMobile } from "react-icons/fa";
+import PairScanner from "../components/PairScanner";
 
 export default function SecurityPage() {
   const walkinRef: React.RefObject<HTMLDialogElement> = React.useRef(null);
@@ -15,6 +17,7 @@ export default function SecurityPage() {
     <div className="w-full">
       <div>
         <div className="flex w-full justify-end  mb-6">
+          <PairScanner />
           <button
             className="btn bg-blue-600 text-white hover:bg-blue-600 hover:shadow-lg"
             onClick={() => {

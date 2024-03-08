@@ -188,9 +188,10 @@ const CreateOrSelectVisitor: React.FC<PropsIntf> = ({
           </label>
         </div>
         <div className="flex overflow-x-auto w-full  mt-8 p-2">
-          {suggestedVisitors.slice(0, 5).map((sv) => (
+          {suggestedVisitors.slice(0, 5).map((sv, index) => (
             <div
               className="mr-6 flex flex-col items-center p-1 cursor-pointer hover:text-blue-700 "
+              key={index}
               onClick={() => {
                 if (sv.placeholder == "yes") return;
                 onSelectVisiorCallback(sv);

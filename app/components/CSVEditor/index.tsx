@@ -121,7 +121,7 @@ const CSVEditor: React.FC<CSVEditorProps> = ({ content }) => {
                         }}
                       >
                         {[...options].map((op) => (
-                          <option>{op?.name}</option>
+                          <option key={op.name}>{op?.name}</option>
                         ))}
                       </select>
                     </div>

@@ -3,8 +3,7 @@ import * as React from "react";
 import { useUserContext } from "../context";
 import InvitationReqAction from "@/app/components/InvitationReqAction";
 import InvitationCard from "@/app/components/InvitationCard";
-
-export const REQUEST_NAME = "REQUESTS";
+import { REQUEST_NAME } from "@/app/constants";
 
 export default function RequestPage() {
   const { invitationRequests, loadInvitationRequests, isLoading } =

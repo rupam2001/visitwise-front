@@ -158,7 +158,7 @@ export default function Navbar() {
             className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-72"
           >
             {notification.map((n) => (
-              <li className="">
+              <li className="" key={n.id}>
                 <a dangerouslySetInnerHTML={{ __html: n.text }}></a>
               </li>
             ))}

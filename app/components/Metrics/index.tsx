@@ -1,6 +1,7 @@
 import { ENDPOINT } from "@/app/constants";
 import { getAuthHeaders } from "@/app/utils";
 import moment from "moment";
+import { useSearchParams } from "next/navigation";
 import * as React from "react";
 interface MetricProps {
   start_date: string;

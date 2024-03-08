@@ -1,5 +1,5 @@
 "use client";
-import { ENDPOINT } from "@/app/constants";
+import { ENDPOINT, INVITES_NAME } from "@/app/constants";
 import { InvitationPassData } from "@/app/types";
 import { getAuthHeaders } from "@/app/utils";
 import * as React from "react";
@@ -7,19 +7,28 @@ import { useUserContext } from "../context";
 import InvitationCard from "@/app/components/InvitationCard";
 import Link from "next/link";
 
-export const INVITES_NAME = "INVITES";
-
 export default function Invites() {
   const { loadInvitations, invitations, addLoader, removeLoader, isLoading } =
     useUserContext();
 
+  const [page, setPage] = React.useState(1);
+  const [totalPage, setTotalPage] = React.useState(1);
+
   React.useEffect(() => {
     (async () => {
       try {
-        invitations.length == 0 && loadInvitations();
+        if (invitations.length == 0 || true) {
+          const res = await loadInvitations(page);
+          setTotalPage(res.extra_data["total_page"]);
+        }
       } catch (error) {}
     })();
-  }, []);
+  }, [page]);
+  const onClickPage = async (p: number) => {
+    const res = await loadInvitations(p);
+    setTotalPage(res.extra_data["total_page"]);
+    setPage(p);
+  };
 
   return (
     <div className="drawer drawer-end h-full">
@@ -54,10 +63,24 @@ export default function Invites() {
         )}
         <div className="flex flex-wrap">
           {invitations.map((inv, index) => (
-            <div key={index} className="m-2 drawer-button">
+            <div key={inv.id} className="m-2 drawer-button">
               <InvitationCard invitation={inv} FooterComponent={null} />
             </div>
           ))}
+        </div>
+        <div className="join mt-4 mb-10 float-right mr-6">
+          {totalPage != 1 &&
+            Array.from(Array(totalPage).keys()).map((p, index) => (
+              <input
+                className="join-item btn btn-square"
+                type="radio"
+                name="options"
+                aria-label={(p + 1).toString()}
+                checked={index + 1 == page}
+                key={p}
+                onClick={() => onClickPage(p + 1)}
+              />
+            ))}
         </div>
       </div>
     </div>

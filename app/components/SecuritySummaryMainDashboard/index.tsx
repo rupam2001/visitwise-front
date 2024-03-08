@@ -38,7 +38,8 @@ export default function SecuritySummaryMainDashboard() {
   const [searchQuery, setSearchQuery] = React.useState("");
 
   React.useEffect(() => {
-    setLocalInvitationData(invitationData);
+    if (searchQuery != "" || currentFilter == "All")
+      setLocalInvitationData(invitationData);
   }, [invitationData]);
 
   React.useEffect(() => {
@@ -108,7 +109,7 @@ export default function SecuritySummaryMainDashboard() {
       <div className="flex">
         <div className="divider divider-start flex-1 mr-4">
           <div className="text-lg font-semibold text-green-600">
-            Today's Summary
+            {"Today's Summary"}
           </div>
         </div>
         <select

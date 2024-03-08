@@ -35,7 +35,10 @@ const InvitationTable: React.FC<InvitationTableProps> = ({
         <tbody>
           {/* row 1 */}
           {invitationData.map((invitation) => (
-            <tr className="rounded-lg hover:shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]">
+            <tr
+              key={invitation.id}
+              className="rounded-lg hover:shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]"
+            >
               <td>
                 <div className="flex items-center gap-3">
                   <div className="avatar placeholder">
@@ -59,12 +62,10 @@ const InvitationTable: React.FC<InvitationTableProps> = ({
                     invitation.visiting_person.last_name}
                 </div>
               </td>
-              <td>
-                {moment(new Date(invitation.valid_from)).format("h:mm a")}
-              </td>
+              <td>{moment(new Date(invitation.valid_from)).format("lll")}</td>
               <td>
                 {invitation.checked_in_at
-                  ? moment(new Date(invitation.checked_in_at)).format("h:mm a")
+                  ? moment(new Date(invitation.checked_in_at)).format("lll")
                   : isTime1BeforeTime2(
                       invitation.valid_from,
                       new Date().toISOString()
@@ -74,7 +75,7 @@ const InvitationTable: React.FC<InvitationTableProps> = ({
               </td>
               <td>
                 {invitation.checked_out_at
-                  ? moment(new Date(invitation.checked_out_at)).format("h:mm a")
+                  ? moment(new Date(invitation.checked_out_at)).format("lll")
                   : invitation.checked_in_at
                   ? "Currently in premise"
                   : "--"}

@@ -137,9 +137,10 @@ const InviteDetailInputSecurity: React.FC<PropsIntf> = ({
           <div className="flex overflow-x-auto w-2/3   p-2">
             <div className="flex overflow-x-auto w-2/3  mt-4 p-2">
               {searchQuery.trim() != "" &&
-                users.slice(0, 5).map((user) => (
+                users.slice(0, 5).map((user, index) => (
                   <div
                     className="mr-6 flex flex-col items-center p-1 cursor-pointer hover:text-blue-700 "
+                    key={index}
                     onClick={() => {
                       if (user.placeholder == "yes") return;
                       onSelectUserCallback(user);
